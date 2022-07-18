@@ -1,34 +1,34 @@
 export const WORDS = [
 { word: "kawa", cases: [
 { case: "nominative", declensions: [
-{singular : "kawa", plural : "kawy"}] },
+{single : "kawa", plural : "kawy"}] },
 { case: "genitive", declensions: [
-{singular : "kawy", plural : "kaw"}] },
+{single : "kawy", plural : "kaw"}] },
 { case: "dative", declensions: [
-{singular : "kawie", plural : "kawom"}] },
+{single : "kawie", plural : "kawom"}] },
 { case: "accusative", declensions: [
-{singular : "kawę", plural : "kawy"}] },
+{single : "kawę", plural : "kawy"}] },
 { case: "instrumental", declensions: [
-{singular : "kawą", plural : "kawami"}] },
+{single : "kawą", plural : "kawami"}] },
 { case: "locative", declensions: [
-{singular : "kawie", plural : "kawach"}] },
+{single : "kawie", plural : "kawach"}] },
 { case: "vocative", declensions: [
-{singular : "kawo", plural : "kawy"}] },
+{single : "kawo", plural : "kawy"}] },
 ] },
 { word: "pies", cases: [
 { case: "nominative", declensions: [
-{singular : "pies", plural : "psy"}] },
+{single : "pies", plural : "psy"}] },
 { case: "genitive", declensions: [
-{singular : "psa", plural : "psów"}] },
+{single : "psa", plural : "psów"}] },
 { case: "dative", declensions: [
-{singular : "psu", plural : "psom"}] },
+{single : "psu", plural : "psom"}] },
 { case: "accusative", declensions: [
-{singular : "psa", plural : "psy"}] },
+{single : "psa", plural : "psy"}] },
 { case: "instrumental", declensions: [
-{singular : "psem", plural : "psami"}] },
+{single : "psem", plural : "psami"}] },
 { case: "locative", declensions: [
-{singular : "psie", plural : "psach"}] },
+{single : "psie", plural : "psach"}] },
 { case: "vocative", declensions: [
-{singular : "psie", plural : "psy"}] },
+{single : "psie", plural : "psy"}] },
 ] },
 ]
