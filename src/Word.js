@@ -1,10 +1,49 @@
-import React, {useState} from 'react'
+import React, {useState, useMemo, useEffect} from 'react'
 import { WORDS } from './words'
+
+
 
 export const Word = ({randomWord, randomCase}) => {
 
     const [input, setInput] = useState('')
-console.log(input) 
+
+
+    const [random1, setRandom1] = useState(Math.floor(Math.random()*7))
+    const [random2, setRandom2] = useState(Math.floor(Math.random()*7))
+
+    const [MCoptions, setMCoptions] = useState([])
+
+        let answer = WORDS[randomWord-1].cases[randomCase].declensions[0].singular
+        
+        //check for duplicates
+        if (WORDS[randomWord-1].cases[random1].declensions[0].singular == answer) {
+            setRandom1(Math.floor(Math.random()*7))
+        }
+
+        if (WORDS[randomWord-1].cases[random2].declensions[0].singular == answer) {
+            setRandom2(Math.floor(Math.random()*7))
+        }
+
+        if (WORDS[randomWord-1].cases[random2].declensions[0].singular == WORDS[randomWord-1].cases[random1].declensions[0].singular) {
+            setRandom2(Math.floor(Math.random()*7))
+        }
+
+        let options = [
+            answer,
+            WORDS[randomWord-1].cases[random1].declensions[0].singular,
+            WORDS[randomWord-1].cases[random2].declensions[0].singular
+        ]
+
+useEffect(() => {
+    setMCoptions(options)
+}, options)
+
+const checkMC = option => {
+    setInput(option)
+    option == answer && console.log('correct')
+    option != answer && console.log('try again...')
+}
+
   return (
     <div>Word
         <br/>
@@ -15,7 +54,18 @@ console.log(input)
 
     {randomWord && WORDS[randomWord-1].cases[randomCase].case}<br />
     
-    <input onChange={(e) => setInput(e.target.value)}/>
+    <input value={input} onChange={(e) => setInput(e.target.value)}/>
+<br / >
+    {MCoptions.map(option => {
+        return (
+            <>
+            <span onClick={option => checkMC(option.target.textContent)}>{option}</span>
+            <br />
+            </>
+        )
+    }
+    )}
+
 
 
     {input == WORDS[randomWord-1].cases[randomCase].declensions[0].singular &&
