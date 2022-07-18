@@ -7,9 +7,15 @@ export const Word = ({randomWord, randomCase}) => {
 
     const [input, setInput] = useState('')
 
+    useEffect(() => {
+        setInput('')
+    }, [randomWord, randomCase])
 
     const [random1, setRandom1] = useState(Math.floor(Math.random()*7))
     const [random2, setRandom2] = useState(Math.floor(Math.random()*7))
+
+
+    const [multipleChoice, setMultipleChoice] = useState(false)
 
     const [MCoptions, setMCoptions] = useState([])
 
@@ -56,12 +62,14 @@ const checkMC = option => {
     
     <input value={input} onChange={(e) => setInput(e.target.value)}/>
 <br / >
-    {MCoptions.map(option => {
+    <br/>
+    <input onClick={()=> setMultipleChoice(!multipleChoice)} type="checkbox" />multiple choice <br/>
+    {multipleChoice && MCoptions.map((option, index) => {
         return (
-            <>
+            <div key={index}>
             <span onClick={option => checkMC(option.target.textContent)}>{option}</span>
             <br />
-            </>
+            </div>
         )
     }
     )}
