@@ -5,6 +5,7 @@ import { WORDS } from './words'
 
 export const Word = ({randomWord, randomCase, randomNum}) => {
 
+    console.log(randomCase)
 
     const [input, setInput] = useState('')
 
@@ -15,10 +16,10 @@ export const Word = ({randomWord, randomCase, randomNum}) => {
     const [random1, setRandom1] = useState(Math.floor(Math.random()*7))
     const [random2, setRandom2] = useState(Math.floor(Math.random()*7))
 
-    const [number, setNumber] = useState('single')
+    const [number, setNumber] = useState('singular')
 
     useEffect(() => {
-        randomNum == 1 && setNumber('single')
+        randomNum == 1 && setNumber('singular')
         randomNum == 2 && setNumber('plural')
     }, [randomNum])
 
@@ -26,7 +27,10 @@ export const Word = ({randomWord, randomCase, randomNum}) => {
 
     const [MCoptions, setMCoptions] = useState([])
 
-        let answer = WORDS[randomWord-1].cases[randomCase].declensions[0][number]
+
+
+        let answer = WORDS[randomWord-1].cases.find(x => x.case == randomCase).declensions[0][number]
+        console.log(answer)
 
         //check for duplicates
         if (WORDS[randomWord-1].cases[random1].declensions[0][number] == answer) {
@@ -63,13 +67,16 @@ const checkMC = option => {
     <div>
         <br/>
         <br/> 
-    
-    <br /> <br />
-    {WORDS[randomWord-1].word} - {" "}
 
-    {randomWord && WORDS[randomWord-1].cases[randomCase].case}<br />
+    <h2>{WORDS[randomWord-1].word}</h2>
+
+    <h4>
+    {randomWord && WORDS[randomWord-1].cases.find(x => x.case == randomCase).case}{" - "}
+    {number}
+    </h4>
+
     
-    {number}<br/>
+
 
 
     <input value={input} onChange={(e) => setInput(e.target.value)}/>
@@ -88,7 +95,7 @@ const checkMC = option => {
 
 
 
-    {input == WORDS[randomWord-1].cases[randomCase].declensions[0][number] &&
+    {input == WORDS[randomWord-1].cases.find(x => x.case == randomCase).declensions[0][number] &&
      <h1>Correct!</h1>
     }
     
