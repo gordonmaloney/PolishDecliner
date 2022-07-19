@@ -1,104 +1,140 @@
-import React, {useState, useMemo, useEffect} from 'react'
-import { WORDS } from './words'
+import React, { useState, useEffect } from "react";
+import { WORDS } from "./words";
+import {
+  Button,
+  Checkbox,
+  TextField,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from "@mui/material";
 
+export const Word = ({ randomWord, randomCase, randomNum }) => {
+  const [input, setInput] = useState("");
 
+  const [answer, setAnswer] = useState(
+    WORDS[randomWord - 1].cases.find((x) => x.case == randomCase)
+      .declensions[0][randomNum == 1 ? "singular" : "plural"]
+  );
 
-export const Word = ({randomWord, randomCase, randomNum}) => {
+  const [multipleChoice, setMultipleChoice] = useState(false);
 
-    console.log(randomCase)
+  useEffect(() => {
+    setAnswer(
+      WORDS[randomWord - 1].cases.find((x) => x.case == randomCase)
+        .declensions[0][randomNum == 1 ? "singular" : "plural"]
+    );
+  }, []);
 
-    const [input, setInput] = useState('')
+  let possibleAnswers = [
+    ...WORDS[randomWord - 1].cases.map((x) => x.declensions[0].singular),
+    ...WORDS[randomWord - 1].cases.map((x) => x.declensions[0].plural),
+  ];
 
-    useEffect(() => {
-        setInput('')
-    }, [randomWord, randomCase])
+  let uniqAnswers = [...new Set(possibleAnswers)].filter(
+    (ans) => ans != answer
+  );
 
-    const [random1, setRandom1] = useState(Math.floor(Math.random()*7))
-    const [random2, setRandom2] = useState(Math.floor(Math.random()*7))
+  //shuffle array function
+  function shuffle(array) {
+    let currentIndex = array.length,
+      randomIndex;
 
-    const [number, setNumber] = useState('singular')
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
 
-    useEffect(() => {
-        randomNum == 1 && setNumber('singular')
-        randomNum == 2 && setNumber('plural')
-    }, [randomNum])
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
 
-    const [multipleChoice, setMultipleChoice] = useState(false)
+    return array;
+  }
 
-    const [MCoptions, setMCoptions] = useState([])
+  let shuffledAnswers = shuffle(uniqAnswers);
 
+  const [options, setOptions] = useState([
+    answer,
+    shuffledAnswers[0],
+    shuffledAnswers[1],
+  ]);
 
+  useEffect(() => {
+    setAnswer(
+      WORDS[randomWord - 1].cases.find((x) => x.case == randomCase)
+        .declensions[0][randomNum == 1 ? "singular" : "plural"]
+    );
 
-        let answer = WORDS[randomWord-1].cases.find(x => x.case == randomCase).declensions[0][number]
-        console.log(answer)
+    let answer2 = WORDS[randomWord - 1].cases.find((x) => x.case == randomCase)
+      .declensions[0][randomNum == 1 ? "singular" : "plural"];
 
-        //check for duplicates
-        if (WORDS[randomWord-1].cases[random1].declensions[0][number] == answer) {
-            setRandom1(Math.floor(Math.random()*7))
-        }
+    let possibleAnswers2 = [
+      ...WORDS[randomWord - 1].cases.map((x) => x.declensions[0].singular),
+      ...WORDS[randomWord - 1].cases.map((x) => x.declensions[0].plural),
+    ];
 
-        if (WORDS[randomWord-1].cases[random2].declensions[0][number] == answer) {
-            setRandom2(Math.floor(Math.random()*7))
-        }
+    let uniqAnswers2 = [...new Set(possibleAnswers2)].filter(
+      (ans) => ans != answer2
+    );
 
-        if (WORDS[randomWord-1].cases[random2].declensions[0][number] == WORDS[randomWord-1].cases[random1].declensions[0][number]) {
-            setRandom2(Math.floor(Math.random()*7))
-        }
+    let shuffledAnswers2 = shuffle(uniqAnswers2);
 
-        //will need to check if it's there *is* a different one
+    setOptions(shuffle([answer2, shuffledAnswers2[0], shuffledAnswers2[1]]));
 
-        let options = [
-            answer,
-            WORDS[randomWord-1].cases[random1].declensions[0][number],
-            WORDS[randomWord-1].cases[random2].declensions[0][number]
-        ]
-
-useEffect(() => {
-    setMCoptions(options)
-}, options)
-
-const checkMC = option => {
-    setInput(option)
-    option == answer && console.log('correct')
-    option != answer && console.log('try again...')
-}
+    setInput("");
+  }, [randomCase, randomNum, randomWord]);
 
   return (
     <div>
-        <br/>
-        <br/> 
 
-    <h2>{WORDS[randomWord-1].word}</h2>
+      <span className="polishText"
+        style={{backgroundColor: "lightblue", padding: "10px 20px", fontSize: '40px'}}
+        >{WORDS[randomWord - 1].word}</span>
 
-    <h4>
-    {randomWord && WORDS[randomWord-1].cases.find(x => x.case == randomCase).case}{" - "}
-    {number}
-    </h4>
+      <h3>
+        {randomWord &&
+          WORDS[randomWord - 1].cases.find((x) => x.case == randomCase).case}
+        {" - "}
+        {randomNum == 1 ? "singular" : "plural"}
+      </h3>
 
-    
+      <TextField
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        sx={{ backgroundColor: input == answer && "lightgreen" }}
+      />
+
+      <br />
+      <br />
+
+      <Accordion sx={{ width: "60%", minWidth: "300px" }}>
+        <AccordionSummary expandIcon={<h3>v</h3>}>
+          <h3 style={{margin: '0px', padding: '0px'}}>multiple choice</h3>
+        </AccordionSummary>
+        <AccordionDetails>
+          {options.map((option, index) => {
+            return (
+              <span key={index}>
+                <Button
+                sx={{fontFamily: "Roboto", m: 1}} 
+                  variant="contained"
+                  size="medium"
+                  onClick={(option) => setInput(option.target.textContent)}
+                >
+                  {option}
+                </Button>
+              </span>
+            );
+          })}
+        </AccordionDetails>
+      </Accordion>
 
 
-
-    <input value={input} onChange={(e) => setInput(e.target.value)}/>
-<br / >
-    <br/>
-    <input onClick={()=> setMultipleChoice(!multipleChoice)} type="checkbox" />multiple choice <br/>
-    {multipleChoice && MCoptions.map((option, index) => {
-        return (
-            <div key={index}>
-            <span onClick={option => checkMC(option.target.textContent)}>{option}</span>
-            <br />
-            </div>
-        )
-    }
-    )}
-
-
-
-    {input == WORDS[randomWord-1].cases.find(x => x.case == randomCase).declensions[0][number] &&
-     <h1>Correct!</h1>
-    }
-    
     </div>
-  )
-}
+  );
+};
